@@ -2,12 +2,9 @@
 #include "I2C.h"
 
 void WiFiSetup::begin(const char* apName) {
-    WiFiManager wifiManager;
-    if (wifiManager.autoConnect()) printLCD("Connect","WiFi");
+    wifiManager.setDebugOutput(false);
+    wifiManager.setConfigPortalTimeout(5);
+    bool res = wifiManager.autoConnect(apName,"password");
+    if (res) printLCD("Connect","WiFi");
     else printLCD("Disconnect","WiFi");
-    wifiManager.startConfigPortal("ESP8266","password");
-}
-
-String WiFiSetup::getLocalIP() {
-    return WiFi.localIP().toString();
 }
