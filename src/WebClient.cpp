@@ -3,9 +3,9 @@
 WebClient::WebClient() : server(80), apiUrl("") {}
 
 void WebClient::begin() {
-  server.on("/", std::bind(&WebClient::handleRoot, this));
-  server.on("/submit", std::bind(&WebClient::handleSubmit, this));
-  server.on("/set-endpoint", std::bind(&WebClient::handleSetEndpoint, this));
+  server.on("/", [this](){handleRoot();});
+  server.on("/submit", [this](){handleSubmit();});
+  server.on("/set-endpoint", [this](){handleSetEndpoint();});
   server.begin();
   Serial.println("[WebClient] Server started");
   Serial.print("[WebClient] IP: ");
@@ -97,3 +97,6 @@ void WebClient::handleSetEndpoint() {
 String WebClient::getApiUrl() {
   return apiUrl;
 }
+
+
+
