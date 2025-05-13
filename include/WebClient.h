@@ -16,9 +16,11 @@ public:
 private:
   ESP8266WebServer server;
   String apiUrl;
+  String endPoint;
   ApiClient *apiClient;
   void handleRoot();
   void handleSubmit();
+  void handleSetEndpoint();
 };
 
 #endif

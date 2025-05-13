@@ -5,6 +5,7 @@ WebClient::WebClient() : server(80), apiUrl("") {}
 void WebClient::begin() {
   server.on("/", std::bind(&WebClient::handleRoot, this));
   server.on("/submit", std::bind(&WebClient::handleSubmit, this));
+  server.on("/set-endpoint", std::bind(&WebClient::handleSetEndpoint, this));
   server.begin();
   Serial.println("[WebClient] Server started");
   Serial.print("[WebClient] IP: ");
@@ -26,6 +27,13 @@ void WebClient::handleRoot() {
                 <input type="text" id="api" name="api" style="width:300px"><br><br>
                 <input type="submit" value="제출">
             </form>
+            <hr>
+            <h2>API 엔드포인트 설정</h2>
+            <form action="/set-endpoint" method="GET">
+                <label for="ep">Endpoint:</label><br>
+                <input type="text" id="ep" name="ep" style="width:300px"><br><br>
+                <input type="submit" value="엔드포인트 설정">
+            </form>
         </body>
         </html>
     )=====";
@@ -39,6 +47,9 @@ void WebClient::setApiClient(ApiClient *client) {
 void WebClient::handleSubmit() {
   if (server.hasArg("api")) {
     apiUrl = server.arg("api");
+    if (!apiUrl.startsWith("http://") && !apiUrl.startsWith("https://")) {
+      apiUrl = "https://" + apiUrl;
+    }
     apiClient->setApiUrl((char*)apiUrl.c_str());
     Serial.println("[WebClient] API URL 저장: " + apiUrl);
 
@@ -54,6 +65,29 @@ void WebClient::handleSubmit() {
       </html>
     )====";
 
+    server.send(200, "text/html", html);
+  } else {
+    server.send(400, "text/plain", "잘못된 요청");
+  }
+}
+
+void WebClient::handleSetEndpoint() {
+  if (server.hasArg("ep")) {
+    endPoint = server.arg("ep");
+    apiClient->setEndPoint((char*)endPoint.c_str());
+    Serial.println("[WebClient] 엔드포인트 저장: " + endPoint);
+
+    String html = R"====(
+      <html>
+        <head>
+          <meta http-equiv="refresh" content="2; url=/" />
+        </head>
+        <body>
+          <h3>엔드포인트가 설정되었습니다.</h3>
+          <p>잠시 후 메인 페이지로 이동합니다.</p>
+        </body>
+      </html>
+    )====";
     server.send(200, "text/html", html);
   } else {
     server.send(400, "text/plain", "잘못된 요청");
