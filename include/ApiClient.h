@@ -1,17 +1,27 @@
-#ifndef API_CLIENT_H
-#define API_CLIENT_H
+// include/ApiClient.h
+#ifndef APICLIENT_H
+#define APICLIENT_H
 
 #include <Arduino.h>
+#include <EEPROM.h>
 
-class ApiClient{
+#define EEPROM_SIZE 256
+#define URL_ADDR 0
+#define ENDPOINT_ADDR 128
+
+class ApiClient {
 private:
-  const char* apiUrl;
-  const char* endPoint;
+  String apiUrl;
+  String endPoint;
+
 public:
-  ApiClient(const char* url, const char* point);
+  ApiClient();
   void setApiUrl(char* url);
   void setEndPoint(char* point);
   void httpGet();
+
+  void saveToEEPROM();
+  void loadFromEEPROM();
 };
 
 #endif
