@@ -3,10 +3,18 @@
 #include <WiFiClientSecure.h>
 #include "ApiClient.h"
 
+ApiClient::ApiClient(const char *url, const char *point) {
+    apiUrl = url;
+    endPoint = point;
+}
+
 void ApiClient::setApiUrl(char* url) {
     apiUrl = url;
 }
-void ApiClient::httpGet(const char *endPoint) {
+void ApiClient::setEndPoint(char* point) {
+    endPoint = point;
+}
+void ApiClient::httpGet() {
     WiFiClientSecure client;
     client.setInsecure();  // 인증서 검증 안 함
     client.setTimeout(10000);
@@ -21,8 +29,8 @@ void ApiClient::httpGet(const char *endPoint) {
             DeserializationError error = deserializeJson(doc, payload);
 
             if (!error && doc.is<JsonArray>() && doc.size() > 0) {
-                String title = doc[0]["title"].as<String>();
-                Serial.println("[API] Title: "+title);
+                String title = doc[0].as<String>();
+                Serial.println("[API] : "+title);
             } else {
                 Serial.println("[API] JSON 파싱 실패 또는 빈 배열");
             }

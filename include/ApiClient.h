@@ -5,10 +5,13 @@
 
 class ApiClient{
 private:
-  char* apiUrl;
+  const char* apiUrl;
+  const char* endPoint;
 public:
+  ApiClient(const char* url, const char* point);
   void setApiUrl(char* url);
-  void httpGet(const char *endPoint = "/");
+  void setEndPoint(char* point);
+  void httpGet();
 };
 
 #endif
