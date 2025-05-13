@@ -6,6 +6,6 @@ void WiFiSetup::begin(const char* apName) {
     //wifiManager.resetSettings();
     //wifiManager.setConfigPortalTimeout(5);
     bool res = wifiManager.autoConnect(apName,"password");
-    if (res) printLCD("Connect","WiFi");
+    if (res) printLCD("Connect",WiFi.localIP().toString());
     else printLCD("Disconnect","WiFi");
 }
