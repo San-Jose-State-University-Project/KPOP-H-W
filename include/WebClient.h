@@ -12,7 +12,6 @@ public:
   void handleClient();
   void setApiClient(ApiClient *client);
   String getApiUrl();
-
 private:
   ESP8266WebServer server;
   String apiUrl;

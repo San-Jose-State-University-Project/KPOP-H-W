@@ -5,10 +5,10 @@
 #include <WiFiManager.h>
 
 class WiFiSetup {
-private:
-    WiFiManager wifiManager;
 public:
     void begin(const char* apName = "ESP-Setup");
+private:
+    WiFiManager wifiManager;
 };
 
 #endif
