@@ -39,45 +39,50 @@ void ApiClient::httpGet() {
 
         if (httpCode == HTTP_CODE_OK) {
             String payload = http.getString();
-            Serial.println("[HTTP] Payload:");
-            Serial.println(payload);
+            if (Debug) {
+                Serial.println("[HTTP] Payload:");
+                Serial.println(payload);
 
-            Serial.print("[MEMORY] Free Heap: ");
-            Serial.println(ESP.getFreeHeap());
-
-            StaticJsonDocument<2048> doc;  // 또는 필요시 DynamicJsonDocument  // 최신 ArduinoJson에서는 JsonDocument 권장
+                Serial.print("[API] Free Heap: ");
+                Serial.println(ESP.getFreeHeap());
+            }
+            StaticJsonDocument<2048> doc;
             DeserializationError error = deserializeJson(doc, payload);
 
             if (!error) {
                 if (doc.is<JsonArray>()) {
-                    Serial.print("[API] 페이지 수: ");
-                    Serial.println(pageManager->getMaxPage());
                     int maxAddCount = 4 - pageManager->getMaxPage();
-                    Serial.println(maxAddCount);
                     int arrSize = static_cast<int>(doc.size());
                     int pageCount = (maxAddCount < arrSize) ? maxAddCount : arrSize;
-
-                    for (int i = 0; i < maxAddCount; i++) {
+                    if (Debug) {
+                        Serial.print("[API] 빈 페이지 수: ");
+                        Serial.println(maxAddCount);
+                    }
+                    for (int i = 0; i < pageCount; i++) {
                         pageManager->addPage(doc[i]["title"].as<String>(), doc[i]["videoId"].as<String>());
                     }
 
-                    Serial.println("[API] 제목 예시: " + doc[0]["title"].as<String>());
+                    Serial.println("[API] 첫 데이터 : " + doc[0]["title"].as<String>());
                 } else {
                     Serial.println("[API] JSON은 배열이 아님 또는 크기 부족");
                 }
             } else {
-                Serial.print("[JSON ERROR] ");
-                Serial.println(error.c_str());
+                if (Debug) {
+                    Serial.print("[JSON ERROR] ");
+                    Serial.println(error.c_str());
+                }
             }
         } else {
-            Serial.print("[HTTP ERROR] Code: ");
-            Serial.println(httpCode);
-            Serial.println(http.getString());
+            if (Debug) {
+                Serial.print("[HTTP ERROR] Code: ");
+                Serial.println(httpCode);
+                Serial.println(http.getString());
+            }
         }
 
         http.end();
     } else {
-        Serial.println("[HTTP] 연결 실패");
+        if (Debug) Serial.println("[HTTP] 연결 실패");
     }
 }
 
@@ -93,7 +98,7 @@ void ApiClient::saveToEEPROM() {
     EEPROM.write(ENDPOINT_ADDR + endPoint.length(), '\0');
 
     EEPROM.commit();
-    Serial.println("[EEPROM] 저장 완료");
+    if (Debug) Serial.println("[EEPROM] 저장 완료");
 }
 
 void ApiClient::loadFromEEPROM() {
@@ -115,6 +120,11 @@ void ApiClient::loadFromEEPROM() {
     apiUrl = String(urlBuf);
     endPoint = String(epBuf);
 
-    Serial.println("[EEPROM] 불러온 URL: " + apiUrl);
-    Serial.println("[EEPROM] 불러온 EP : " + endPoint);
+    if (Debug) {
+        Serial.println("[EEPROM] 불러온 URL: " + apiUrl);
+        Serial.println("[EEPROM] 불러온 EP : " + endPoint);
+    }
+}
+void ApiClient::setDebug(bool debug) {
+    Debug = debug;
 }
