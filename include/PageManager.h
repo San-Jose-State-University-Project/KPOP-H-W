@@ -11,14 +11,15 @@ public:
   void nextPage();
   void showCurrentPage();
   void clearPages();
+  size_t getMaxPage();
 private:
   struct Page {
     String title;
     String content;
   };
-
   std::vector<Page> pages;
   size_t currentIndex;
+  size_t maxPage;
 };
 
 #endif

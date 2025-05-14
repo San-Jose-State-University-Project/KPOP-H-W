@@ -5,6 +5,7 @@ PageManager::PageManager() : currentIndex(0) {}
 
 void PageManager::addPage(const String& title, const String& content) {
   pages.push_back({title, content});
+  maxPage++;
 }
 
 void PageManager::nextPage() {
@@ -21,5 +22,10 @@ void PageManager::showCurrentPage() {
 void PageManager::clearPages() {
   pages.clear();
   currentIndex = 0;
+  maxPage = 0;
   printLCD("페이지 없음", ""); // or just clear the screen
+}
+
+size_t PageManager::getMaxPage() {
+  return maxPage;
 }
