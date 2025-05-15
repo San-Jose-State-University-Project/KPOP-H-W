@@ -51,9 +51,9 @@ void ApiClient::httpGet() {
 
             if (!error) {
                 if (doc.is<JsonArray>()) {
-                    int maxAddCount = 4 - pageManager->getMaxPage();
-                    int arrSize = static_cast<int>(doc.size());
-                    int pageCount = (maxAddCount < arrSize) ? maxAddCount : arrSize;
+                    size_t maxAddCount = 4 - pageManager->getMaxPage();
+                    size_t arrSize = static_cast<size_t>(doc.size());
+                    size_t pageCount = (maxAddCount < arrSize) ? maxAddCount : arrSize;
                     if (Debug) {
                         Serial.print("[API] 빈 페이지 수: ");
                         Serial.println(maxAddCount);
@@ -61,7 +61,7 @@ void ApiClient::httpGet() {
                     for (int i = 0; i < pageCount; i++) {
                         pageManager->addPage(doc[i]["title"].as<String>(), doc[i]["videoId"].as<String>());
                     }
-
+                    pageManager->showCurrentPage();
                     Serial.println("[API] 첫 데이터 : " + doc[0]["title"].as<String>());
                 } else {
                     Serial.println("[API] JSON은 배열이 아님 또는 크기 부족");
