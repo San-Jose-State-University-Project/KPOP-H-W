@@ -1,6 +1,8 @@
 #include "WebClient.h"
 
-WebClient::WebClient() : server(80), apiUrl("") {}
+WebClient::WebClient(ApiClient *client) : server(80), apiUrl("") {
+  apiClient = client;
+}
 
 void WebClient::begin() {
   server.on("/", [this](){handleRoot();});
@@ -44,6 +46,11 @@ void WebClient::setApiClient(ApiClient *client) {
   apiClient = client;
 }
 
+void WebClient::setPageManager(PageManager *pm) {
+  pageManager = pm;
+}
+
+
 void WebClient::handleSubmit() {
   if (server.hasArg("api")) {
     apiUrl = server.arg("api");
@@ -51,6 +58,7 @@ void WebClient::handleSubmit() {
       apiUrl = "https://" + apiUrl;
     }
     apiClient->setApiUrl((char*)apiUrl.c_str());
+    pageManager->clearPages();
     Serial.println("[WebClient] API URL 저장: " + apiUrl);
 
     String html = R"====(
