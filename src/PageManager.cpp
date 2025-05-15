@@ -23,7 +23,7 @@ void PageManager::clearPages() {
   pages.clear();
   currentIndex = 0;
   maxPage = 0;
-  printLCD("페이지 없음", ""); // or just clear the screen
+  printLCD("Empty", "Pages"); // or just clear the screen
 }
 
 size_t PageManager::getMaxPage() {
