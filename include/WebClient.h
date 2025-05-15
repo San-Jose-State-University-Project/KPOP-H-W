@@ -7,16 +7,18 @@
 
 class WebClient {
 public:
-  WebClient();
+  WebClient(ApiClient *client);
   void begin();
   void handleClient();
   void setApiClient(ApiClient *client);
+  void setPageManager(PageManager *pm);
   String getApiUrl();
 private:
   ESP8266WebServer server;
   String apiUrl;
   String endPoint;
   ApiClient *apiClient;
+  PageManager *pageManager;
   void handleRoot();
   void handleSubmit();
   void handleSetEndpoint();
