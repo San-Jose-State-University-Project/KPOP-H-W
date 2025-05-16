@@ -21,7 +21,7 @@ void IRAM_ATTR handleButton1() {
     uint32_t now = ESP.getCycleCount();
     if (now - lastButton1Cycle > DEBOUNCE_CYCLES) {
         lastButton1Cycle = now;
-        pageManager.nextPage();
+        pageManager.beforePage();
     }
 }
 
