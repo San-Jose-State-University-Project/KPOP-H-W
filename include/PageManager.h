@@ -9,8 +9,10 @@ public:
   PageManager();
   void addPage(const String& title, const String& content);
   void nextPage();
+  void beforePage();
   void showCurrentPage();
   void clearPages();
+  size_t getCurrentPage();
   size_t getMaxPage();
 private:
   struct Page {

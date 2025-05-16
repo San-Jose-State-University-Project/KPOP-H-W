@@ -14,6 +14,12 @@ void PageManager::nextPage() {
   showCurrentPage();
 }
 
+void PageManager::beforePage() {
+  if (pages.empty()) return;
+  currentIndex = (currentIndex + pages.size() - 1) % pages.size();
+  showCurrentPage();
+}
+
 void PageManager::showCurrentPage() {
   if (pages.empty()) return;
   printLCD(pages[currentIndex].title, pages[currentIndex].content);
@@ -24,6 +30,10 @@ void PageManager::clearPages() {
   currentIndex = 0;
   maxPage = 0;
   printLCD("Empty", "Pages"); // or just clear the screen
+}
+
+size_t PageManager::getCurrentPage() {
+  return currentIndex;
 }
 
 size_t PageManager::getMaxPage() {
