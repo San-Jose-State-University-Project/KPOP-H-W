@@ -55,8 +55,8 @@ void ApiClient::httpGet() {
                     size_t arrSize = static_cast<size_t>(doc.size());
                     size_t pageCount = (maxAddCount < arrSize) ? maxAddCount : arrSize;
                     if (Debug) {
-                        Serial.print("[API] 빈 페이지 수: ");
-                        Serial.println(maxAddCount);
+                        Serial.print("[API] 페이지: ");
+                        Serial.println(pageManager->getCurrentPage());
                     }
                     for (int i = 0; i < pageCount; i++) {
                         pageManager->addPage(doc[i]["title"].as<String>(), doc[i]["videoId"].as<String>());
