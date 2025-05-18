@@ -2,6 +2,7 @@
 #include <ESP8266HTTPClient.h>
 #include <WiFiClientSecure.h>
 #include <Arduino.h>
+#include <ESP8266WiFi.h>
 #include "ApiClient.h"
 
 #define URL_ADDR 0
@@ -51,7 +52,7 @@ void ApiClient::httpGet() {
 
             if (!error) {
                 if (doc.is<JsonArray>()) {
-                    size_t maxAddCount = 4 - pageManager->getMaxPage();
+                    size_t maxAddCount = 5 - pageManager->getMaxPage();
                     size_t arrSize = static_cast<size_t>(doc.size());
                     size_t pageCount = (maxAddCount < arrSize) ? maxAddCount : arrSize;
                     if (Debug) {
@@ -99,6 +100,7 @@ void ApiClient::saveToEEPROM() {
 
     EEPROM.commit();
     if (Debug) Serial.println("[EEPROM] 저장 완료");
+    pageManager->addPage(WiFi.localIP().toString(),endPoint);
 }
 
 void ApiClient::loadFromEEPROM() {
@@ -124,6 +126,7 @@ void ApiClient::loadFromEEPROM() {
         Serial.println("[EEPROM] 불러온 URL: " + apiUrl);
         Serial.println("[EEPROM] 불러온 EP : " + endPoint);
     }
+    pageManager->addPage(WiFi.localIP().toString(),endPoint);
 }
 void ApiClient::setDebug(bool debug) {
     Debug = debug;
