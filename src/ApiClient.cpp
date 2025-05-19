@@ -60,7 +60,7 @@ void ApiClient::httpGet() {
                         Serial.println(pageManager->getCurrentPage());
                     }
                     for (int i = 0; i < pageCount; i++) {
-                        pageManager->addPage(doc[i]["title"].as<String>(), doc[i]["videoId"].as<String>());
+                        pageManager->addPage(doc[i]["title"].as<String>(), doc[i]["videoId"].as<String>(), doc[i]["emotion"].as<String>());
                     }
                     pageManager->showCurrentPage();
                     Serial.println("[API] 첫 데이터 : " + doc[0]["title"].as<String>());
