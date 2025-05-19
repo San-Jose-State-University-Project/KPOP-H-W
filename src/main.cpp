@@ -2,6 +2,7 @@
 #include "WiFiSetup.h"
 #include "I2C.h"
 #include "ApiClient.h"
+#include "LedManager.h"
 #include "PageManager.h"
 #include "WebClient.h"
 
@@ -16,6 +17,7 @@ WiFiSetup wifi;
 PageManager pageManager;
 ApiClient apiClient(&pageManager);
 WebClient webClient(&apiClient);
+LedManager ledManager(D0, D6, D7);
 
 void IRAM_ATTR handleButton1() {
     uint32_t now = ESP.getCycleCount();
@@ -41,6 +43,7 @@ void setup() {
     apiClient.loadFromEEPROM();
     webClient.setPageManager(&pageManager);
     webClient.begin();
+    ledManager.begin();
     pinMode(BUTTON1_PIN, INPUT_PULLUP);
     pinMode(BUTTON2_PIN, INPUT_PULLUP);
     attachInterrupt(digitalPinToInterrupt(BUTTON1_PIN), handleButton1, FALLING);
