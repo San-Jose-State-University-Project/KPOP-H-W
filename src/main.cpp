@@ -14,10 +14,10 @@ volatile uint32_t lastButton1Cycle = 0;
 volatile uint32_t lastButton2Cycle = 0;
 
 WiFiSetup wifi;
-PageManager pageManager;
+LedManager ledManager(D0, D6, D7);
+PageManager pageManager(&ledManager);
 ApiClient apiClient(&pageManager);
 WebClient webClient(&apiClient);
-LedManager ledManager(D0, D6, D7);
 
 void IRAM_ATTR handleButton1() {
     uint32_t now = ESP.getCycleCount();
