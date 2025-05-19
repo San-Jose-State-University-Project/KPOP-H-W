@@ -54,25 +54,3 @@ void loop() {
     webClient.handleClient();
     apiClient.httpGet();
 }
-
-
-/*
-*#include "PageManager.h"
-
-PageManager pageManager;
-
-void IRAM_ATTR handleButtonPress() {
-    pageManager.nextPage();
-}
-
-void setup() {
-    pinMode(D3, INPUT_PULLUP); // 버튼 연결된 핀
-    attachInterrupt(digitalPinToInterrupt(D3), handleButtonPress, FALLING);
-
-    pageManager.addPage("Page 1", "WiFi Info");
-    pageManager.addPage("Page 2", "API Title");
-    pageManager.addPage("Page 3", "Other Info");
-
-    pageManager.showCurrentPage();
-}
- */
