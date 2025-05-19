@@ -4,10 +4,12 @@
 #include <Arduino.h>
 #include <vector>
 
+#include "LedManager.h"
+
 class PageManager {
 public:
-  PageManager();
-  void addPage(const String& title, const String& content);
+  PageManager(LedManager *lm);
+  void addPage(const String& title, const String& content, const String& emotion = "neutral");
   void nextPage();
   void beforePage();
   void showCurrentPage();
@@ -18,8 +20,10 @@ private:
   struct Page {
     String title;
     String content;
+    String emotion;
   };
   std::vector<Page> pages;
+  LedManager *ledManager;
   size_t currentIndex;
   size_t maxPage;
 };

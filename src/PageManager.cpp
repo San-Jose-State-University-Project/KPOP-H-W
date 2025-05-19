@@ -1,10 +1,13 @@
 #include "PageManager.h"
 #include "I2C.h"
+#include "LedManager.h"
 
-PageManager::PageManager() : currentIndex(0) {}
+PageManager::PageManager(LedManager *lm) : currentIndex(0) {
+  ledManager = lm;
+}
 
-void PageManager::addPage(const String& title, const String& content) {
-  pages.push_back({title, content});
+void PageManager::addPage(const String& title, const String& content, const String& emotion) {
+  pages.push_back({title, content, emotion});
   maxPage++;
 }
 
@@ -23,6 +26,7 @@ void PageManager::beforePage() {
 void PageManager::showCurrentPage() {
   if (pages.empty()) return;
   printLCD(pages[currentIndex].title, pages[currentIndex].content);
+  ledManager->setEmotion(pages[currentIndex].emotion);
 }
 
 void PageManager::clearPages() {
