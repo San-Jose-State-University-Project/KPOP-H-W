@@ -9,3 +9,6 @@ void WiFiSetup::begin(const char* apName) {
     if (res) printLCD("Connect",WiFi.localIP().toString());
     else printLCD("Disconnect","WiFi");
 }
+void WiFiSetup::resetWiFi() {
+    wifiManager.resetSettings();
+}

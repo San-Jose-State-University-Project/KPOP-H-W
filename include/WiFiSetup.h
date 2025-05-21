@@ -7,6 +7,7 @@
 class WiFiSetup {
 public:
     void begin(const char* apName = "ESP-Setup");
+    void resetWiFi();
 private:
     WiFiManager wifiManager;
 };
