@@ -19,6 +19,9 @@ PageManager pageManager(&ledManager);
 ApiClient apiClient(&pageManager);
 WebClient webClient(&apiClient);
 
+unsigned long bothPressedStart = 0;
+const unsigned long RESET_HOLD_TIME = 5000; // 5초
+
 void IRAM_ATTR handleButton1() {
     uint32_t now = ESP.getCycleCount();
     if (now - lastButton1Cycle > DEBOUNCE_CYCLES) {
@@ -44,13 +47,31 @@ void setup() {
     webClient.setPageManager(&pageManager);
     webClient.begin();
     ledManager.begin();
+
     pinMode(BUTTON1_PIN, INPUT_PULLUP);
     pinMode(BUTTON2_PIN, INPUT_PULLUP);
     attachInterrupt(digitalPinToInterrupt(BUTTON1_PIN), handleButton1, FALLING);
     attachInterrupt(digitalPinToInterrupt(BUTTON2_PIN), handleButton2, FALLING);
 }
+
 void loop() {
-    Serial.println(ESP.getCycleCount());
     webClient.handleClient();
     apiClient.httpGet();
+
+    // 두 버튼이 모두 눌렸는지 확인
+    bool b1 = digitalRead(BUTTON1_PIN) == LOW;
+    bool b2 = digitalRead(BUTTON2_PIN) == LOW;
+
+    if (b1 && b2) {
+        if (bothPressedStart == 0) {
+            bothPressedStart = millis(); // 눌린 시간 기록 시작
+        } else if (millis() - bothPressedStart >= RESET_HOLD_TIME) {
+            Serial.println("Wi-Fi 설정 리셋!");
+            wifi.resetWiFi();
+            delay(1000);
+            ESP.restart(); // 리셋 후 재부팅
+        }
+    } else {
+        bothPressedStart = 0; // 하나라도 떼면 시간 초기화
+    }
 }
