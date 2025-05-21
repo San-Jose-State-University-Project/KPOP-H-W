@@ -38,7 +38,7 @@ void ApiClient::httpGet() {
     if (http.begin(client, fullUrl)) {
         int httpCode = http.GET();
 
-        if (httpCode == HTTP_CODE_OK) {
+            if (httpCode == HTTP_CODE_OK) {
             String payload = http.getString();
             if (Debug) {
                 Serial.println("[HTTP] Payload:");
@@ -53,17 +53,17 @@ void ApiClient::httpGet() {
             if (!error) {
                 if (doc.is<JsonArray>()) {
                     size_t maxAddCount = 5 - pageManager->getMaxPage();
-                    size_t arrSize = static_cast<size_t>(doc.size());
-                    size_t pageCount = (maxAddCount < arrSize) ? maxAddCount : arrSize;
+                    size_t arrSize = static_cast<size_t>(doc["emotion_list"].size());
+                    size_t pageCount = min(maxAddCount, arrSize);
                     if (Debug) {
                         Serial.print("[API] 페이지: ");
                         Serial.println(pageManager->getCurrentPage());
                     }
                     for (int i = 0; i < pageCount; i++) {
-                        pageManager->addPage(doc[i]["title"].as<String>(), doc[i]["videoId"].as<String>(), doc[i]["emotion"].as<String>());
+                        pageManager->addPage(doc["emotion_list"][i]["title"].as<String>(), doc[i]["videoId"].as<String>(), doc[i]["emotion"].as<String>());
                     }
                     pageManager->showCurrentPage();
-                    Serial.println("[API] 첫 데이터 : " + doc[0]["title"].as<String>());
+                    Serial.println("[API] 첫 데이터 : " + doc["emotion_list"][0]["title"].as<String>());
                 } else {
                     Serial.println("[API] JSON은 배열이 아님 또는 크기 부족");
                 }
