@@ -1,9 +1,9 @@
 #include <Arduino.h>
 #include "WiFiSetup.h"
-#include "I2C.h"
-#include "ApiClient.h"
-#include "LedManager.h"
-#include "PageManager.h"
+#include <I2C.h>
+#include <ApiClient.h>
+#include <LedManager.h>
+#include <PageManager.h>
 #include "WebClient.h"
 
 #define BUTTON1_PIN D3  // GPIO0
@@ -47,7 +47,6 @@ void setup() {
     webClient.setPageManager(&pageManager);
     webClient.begin();
     ledManager.begin();
-
     pinMode(BUTTON1_PIN, INPUT_PULLUP);
     pinMode(BUTTON2_PIN, INPUT_PULLUP);
     attachInterrupt(digitalPinToInterrupt(BUTTON1_PIN), handleButton1, FALLING);
@@ -74,4 +73,5 @@ void loop() {
     } else {
         bothPressedStart = 0; // 하나라도 떼면 시간 초기화
     }
+    delay(3000);
 }

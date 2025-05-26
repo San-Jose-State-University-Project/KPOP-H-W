@@ -27,8 +27,7 @@ void ApiClient::setEndPoint(const String &point) {
 }
 
 void ApiClient::httpGet() {
-    WiFiClientSecure client;
-    client.setInsecure();
+    WiFiClient client;
     client.setTimeout(10000);
     HTTPClient http;
 
@@ -51,7 +50,7 @@ void ApiClient::httpGet() {
             DeserializationError error = deserializeJson(doc, payload);
 
             if (!error) {
-                if (doc.is<JsonArray>()) {
+                if (doc["emotion_list"].is<JsonArray>()) {
                     size_t maxAddCount = 5 - pageManager->getMaxPage();
                     size_t arrSize = static_cast<size_t>(doc["emotion_list"].size());
                     size_t pageCount = min(maxAddCount, arrSize);
@@ -60,7 +59,7 @@ void ApiClient::httpGet() {
                         Serial.println(pageManager->getCurrentPage());
                     }
                     for (int i = 0; i < pageCount; i++) {
-                        pageManager->addPage(doc["emotion_list"][i]["title"].as<String>(), doc[i]["videoId"].as<String>(), doc[i]["emotion"].as<String>());
+                        pageManager->addPage(doc["emotion_list"][i]["title"].as<String>(), doc["emotion_list"][i]["emotion"].as<String>(), doc["emotion_list"][i]["emotion"].as<String>());
                     }
                     pageManager->showCurrentPage();
                     Serial.println("[API] 첫 데이터 : " + doc["emotion_list"][0]["title"].as<String>());
@@ -100,7 +99,7 @@ void ApiClient::saveToEEPROM() {
 
     EEPROM.commit();
     if (Debug) Serial.println("[EEPROM] 저장 완료");
-    pageManager->addPage(WiFi.localIP().toString(),endPoint);
+    pageManager->addPage(WiFi.localIP().toString(),endPoint,"neutral");
 }
 
 void ApiClient::loadFromEEPROM() {
@@ -126,7 +125,7 @@ void ApiClient::loadFromEEPROM() {
         Serial.println("[EEPROM] 불러온 URL: " + apiUrl);
         Serial.println("[EEPROM] 불러온 EP : " + endPoint);
     }
-    pageManager->addPage(WiFi.localIP().toString(),endPoint);
+    pageManager->addPage(WiFi.localIP().toString(),endPoint, "neutral");
 }
 void ApiClient::setDebug(bool debug) {
     Debug = debug;

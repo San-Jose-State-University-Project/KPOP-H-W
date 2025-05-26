@@ -60,6 +60,7 @@ void WebClient::handleSubmit() {
     apiClient->setApiUrl((char*)apiUrl.c_str());
     pageManager->clearPages();
     Serial.println("[WebClient] API URL 저장: " + apiUrl);
+    pageManager->addPage(WiFi.localIP().toString(),endPoint,"neutral");
 
     String html = R"====(
       <html>
@@ -84,6 +85,7 @@ void WebClient::handleSetEndpoint() {
     endPoint = server.arg("ep");
     apiClient->setEndPoint((char*)endPoint.c_str());
     Serial.println("[WebClient] 엔드포인트 저장: " + endPoint);
+    pageManager->addPage(WiFi.localIP().toString(),endPoint,"neutral");
 
     String html = R"====(
       <html>

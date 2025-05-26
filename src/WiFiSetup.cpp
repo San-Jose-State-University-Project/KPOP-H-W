@@ -1,5 +1,5 @@
 #include "WiFiSetup.h"
-#include "I2C.h"
+#include <I2C.h>
 
 void WiFiSetup::begin(const char* apName) {
     wifiManager.setDebugOutput(false);

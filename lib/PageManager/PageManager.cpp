@@ -1,6 +1,6 @@
 #include "PageManager.h"
-#include "I2C.h"
-#include "LedManager.h"
+#include <I2C.h>
+#include <LedManager.h>
 
 PageManager::PageManager(LedManager *lm) : currentIndex(0) {
   ledManager = lm;
