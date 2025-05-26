@@ -26,6 +26,24 @@ void ApiClient::setEndPoint(const String &point) {
     saveToEEPROM();
 }
 
+String extractEnglishFromParentheses(const String &input) {
+    int startIdx = input.indexOf('(');
+    int endIdx = input.indexOf(')', startIdx);
+
+    if (startIdx != -1 && endIdx != -1 && endIdx > startIdx) {
+        String inside = input.substring(startIdx + 1, endIdx);
+        String result = "";
+        for (size_t i = 0; i < inside.length(); i++) {
+            char c = inside.charAt(i);
+            if (isAlpha(c)) {
+                result += c;
+            }
+        }
+        return result;
+    }
+    return "";
+}
+
 void ApiClient::httpGet() {
     WiFiClient client;
     client.setTimeout(10000);
@@ -46,7 +64,8 @@ void ApiClient::httpGet() {
                 Serial.print("[API] Free Heap: ");
                 Serial.println(ESP.getFreeHeap());
             }
-            StaticJsonDocument<2048> doc;
+
+            JsonDocument doc;
             DeserializationError error = deserializeJson(doc, payload);
 
             if (!error) {
@@ -58,8 +77,11 @@ void ApiClient::httpGet() {
                         Serial.print("[API] 페이지: ");
                         Serial.println(pageManager->getCurrentPage());
                     }
-                    for (int i = 0; i < pageCount; i++) {
-                        pageManager->addPage(doc["emotion_list"][i]["title"].as<String>(), doc["emotion_list"][i]["emotion"].as<String>(), doc["emotion_list"][i]["emotion"].as<String>());
+                    for (size_t i = 0; i < pageCount; i++) {
+                        pageManager->addPage(extractEnglishFromParentheses(
+                            doc["emotion_list"][i]["title"].as<String>())
+                            , doc["emotion_list"][i]["emotion"].as<String>()
+                            , doc["emotion_list"][i]["emotion"].as<String>());
                     }
                     pageManager->showCurrentPage();
                     Serial.println("[API] 첫 데이터 : " + doc["emotion_list"][0]["title"].as<String>());
