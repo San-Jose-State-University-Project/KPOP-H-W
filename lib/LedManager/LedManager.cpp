@@ -5,11 +5,11 @@ LedManager::LedManager(uint8_t r, uint8_t g, uint8_t b)
 
   emotionMap["joy"]    = {0, 0, 255};
   emotionMap["sadness"]  = {255, 255, 0};
-  emotionMap["surprise"]     = {0, 90, 255};   // 두려움: 보라
-  emotionMap["anger"]    = {0, 255, 255};   // 기쁨: 노랑
-  emotionMap["neutral"]  = {0, 0, 0};       // 중립: 꺼짐
-  emotionMap["disgust"]      = {255, 0, 255};     // 슬픔: 파랑
-  emotionMap["fear"] = {127, 255, 127}; // 놀람: 흰색
+  emotionMap["surprise"]     = {0, 90, 255};
+  emotionMap["anger"]    = {0, 255, 255};
+  emotionMap["neutral"]  = {0, 0, 0};
+  emotionMap["disgust"]      = {255, 0, 255};
+  emotionMap["fear"] = {127, 255, 127};
 }
 
 void LedManager::begin() {

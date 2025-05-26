@@ -1,14 +1,6 @@
 #include <Arduino.h>
-#include "WiFiSetup.h"
-#include <I2C.h>
-#include <ApiClient.h>
-#include <LedManager.h>
-#include <PageManager.h>
-#include "WebClient.h"
-
-#define BUTTON1_PIN D3  // GPIO0
-#define BUTTON2_PIN D4  // GPIO2
-#define DEBOUNCE_CYCLES 1600000  // 약 200ms (80MHz 기준)
+#include "lib.h"
+#include "macros.h"
 
 volatile uint32_t lastButton1Cycle = 0;
 volatile uint32_t lastButton2Cycle = 0;
@@ -20,7 +12,7 @@ ApiClient apiClient(&pageManager);
 WebClient webClient(&apiClient);
 
 unsigned long bothPressedStart = 0;
-const unsigned long RESET_HOLD_TIME = 5000; // 5초
+constexpr unsigned long RESET_HOLD_TIME = 5000; // 5초
 
 void IRAM_ATTR handleButton1() {
     uint32_t now = ESP.getCycleCount();
